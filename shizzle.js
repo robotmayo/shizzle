@@ -16,8 +16,10 @@
         if(typeof selector != 'string') return new Error("Selctor must be a string!");
         var charArray = selector.trim().split('')
         ,   tokens = tokenize(charArray)
-        console.log(execute(tokens));
+        return execute(tokens);
     }
+
+
 
     function tokenize(charArray){
         var currentChar = charArray[0]
@@ -40,7 +42,7 @@
             }
             next = charArray[++pos];
             while(next){
-                if(next.match(/^[a-z]+$/)){
+                if(next.match(/^[a-z_-]+$/)){
                     currentToken.value += next;
                     next = charArray[++pos];
                 }else{
@@ -56,8 +58,10 @@
         var usedId = false
         ,   skip = false
         ,   token
+        ,   j
         ,   currentEls
         ,   returnSet = [];
+        
         for(var i = 0, l = tokens.length; i < l; i++){
             token = tokens[i];
             if( token.type === "id" && usedId) skip = true;
@@ -75,11 +79,10 @@
                         if(returnSet.length > 0){
                             currentEls = returnSet;
                             returnSet = [];
-                            for(var j = 0; j < currentEls.length; j++){
+                            for(j = 0; j < currentEls.length; j++){
                                 if(currentEls[j].tagName === token.value.toUpperCase()) returnSet.push(currentEls[j])
                             }
                         }else{
-                            console.log(token.value)
                             returnSet.push.apply(returnSet, Array.prototype.slice.call(document.getElementsByTagName(token.value)));
                         }
                     }
