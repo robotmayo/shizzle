@@ -1,10 +1,11 @@
 (function(){
-    window.$ = window.shizzle = Shizzle;
+    window.$ = window.Shizzle = Shizzle;
 
     function Shizzle(selector){
         if(typeof selector != 'string') return new Error("Selctor must be a string!");
         var charArray = selector.trim().split('')
         ,   tokens = tokenize(charArray)
+        console.log(tokens);
     }
 
     function tokenize(charArray){
@@ -31,7 +32,9 @@
                 currentToken.value += next;
                 next = charArray[pos++];
             }
+            currentChar = next;
         }
+        return tokens;
     }
 
     function token(type){
