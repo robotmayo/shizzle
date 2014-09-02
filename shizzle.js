@@ -30,7 +30,7 @@
         },
         'class' : {
             check : function(el, value){
-                return el.className.indexOf(value) > -1;
+                return el.className.indexOf(value) >= 0;
             },
             get : function(value){
                 return Array.prototype.slice.call(document.getElementsByClassName(value))
