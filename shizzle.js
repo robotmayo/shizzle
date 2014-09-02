@@ -24,7 +24,7 @@
                 currentToken = token("class");
                 tokens.push(currentToken);
             }else if(currentChar !== ' '){
-                currentToken = token("element");
+                currentToken = token("element", currentChar);
                 tokens.push(currentToken);
             }
             next = charArray[++pos];
@@ -41,10 +41,10 @@
         return tokens;
     }
 
-    function token(type){
+    function token(type, value){
         return {
             type : type,
-            value : ''
+            value : value || ''
         }
     }
 }())
