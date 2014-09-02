@@ -98,7 +98,6 @@
                                 if(fns[token.type].check(currentEls[j], token.value)) returnSet.push(currentEls[j])
                             }
                         }else{
-                            console.log(fns[token.type].get("div"), token.value, "EEE");
                             returnSet.push.apply(returnSet, fns[token.type].get(token.value));
                         }
                     }
