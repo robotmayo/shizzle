@@ -19,7 +19,24 @@
         return execute(tokens);
     }
 
-
+    var fns = {
+        'element' : {
+            check : function(el, value){
+                return el.tagName === value.toUpperCase()
+            },
+            get : function(value){
+                return Array.prototype.slice.call(document.getElementsByTagName(value))
+            }
+        },
+        'class' : {
+            check : function(el, value){
+                return el.className.indexOf(value) > -1;
+            },
+            get : function(value){
+                return Array.prototype.slice.call(document.getElementsByClassName(value))
+            }
+        }
+    }
 
     function tokenize(charArray){
         var currentChar = charArray[0]
@@ -61,7 +78,6 @@
         ,   j
         ,   currentEls
         ,   returnSet = [];
-        
         for(var i = 0, l = tokens.length; i < l; i++){
             token = tokens[i];
             if( token.type === "id" && usedId) skip = true;
@@ -71,33 +87,19 @@
                     currentEls = document.getElementById(token.value);
                     if(!currentEls) return [];
                     returnSet.push(currentEls);
-                }
-                if(token.type === "element"){
+                }else{
                     if(usedId){
-                        if(currentEls.tagName !== token.value.toUpperCase()) return [];
+                        if(fns[token.type].check(currentEls, token.value)) return [];
                     }else{
                         if(returnSet.length > 0){
                             currentEls = returnSet;
                             returnSet = [];
                             for(j = 0; j < currentEls.length; j++){
-                                if(currentEls[j].tagName === token.value.toUpperCase()) returnSet.push(currentEls[j])
+                                if(fns[token.type].check(currentEls[j], token.value)) returnSet.push(currentEls[j])
                             }
                         }else{
-                            returnSet.push.apply(returnSet, Array.prototype.slice.call(document.getElementsByTagName(token.value)));
-                        }
-                    }
-                }else if(token.type === "class"){
-                    if(usedId){
-                        if(currentEls.className.indexOf(token.value === -1)) return [];
-                    }else{
-                        if(returnSet.length > 0){
-                            currentEls = returnSet;
-                            returnSet = [];
-                            for(j = 0; j < currentEls.length; j++){
-                                if(currentEls[j].className.indexOf(token.value) > -1) returnSet.push(currentEls[j]);
-                            }
-                        }else{
-                            returnSet.push.apply(returnSet, Array.prototype.slice.call(document.getElementsByClassName(token.value)));
+                            console.log(fns[token.type].get("div"), token.value, "EEE");
+                            returnSet.push.apply(returnSet, fns[token.type].get(token.value));
                         }
                     }
                 }
