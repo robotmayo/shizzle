@@ -19,7 +19,7 @@
         while(currentChar){
             if(currentChar === "#"){
                 currentToken = token("id");
-                tokens.shift(currentToken); // The right most id gets pushed to the front as ids are unique
+                tokens.unshift(currentToken); // The right most id gets pushed to the front as ids are unique
             }else if(currentChar === '.'){
                 currentToken = token("class");
                 tokens.push(currentToken);
@@ -27,12 +27,16 @@
                 currentToken = token("element");
                 tokens.push(currentToken);
             }
-            next = charArray[pos++];
+            next = charArray[++pos];
             while(next){
-                currentToken.value += next;
-                next = charArray[pos++];
+                if(next.match(/^[a-z]+$/)){
+                    currentToken.value += next;
+                    next = charArray[++pos];
+                }else{
+                    break;
+                }
             }
-            currentChar = next;
+            currentChar = charArray[pos];
         }
         return tokens;
     }
